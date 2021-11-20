@@ -84,6 +84,53 @@ buttonEl.setAttribute("data-name", "begin-button");
 console.log(quizQuestions.length);
 console.log(quizQuestions[2]);
 
+//create countdown function for highscore
+function countdown() {
+  
+  var timeInterval = setInterval(function () {
+    if(startTime > 0) {
+      timerEl.textContent = 'Time: ' + startTime;
+      startTime--;
+    }
+    else {
+      timerEl.textContent = 'Time: ' + startTime;
+      clearInterval(timeInterval);
+      return startTime;
+    }
+    console.log(startTime);
+  }, 1000)
+};
 
+var num = 0;
+
+function quiz() {
+    questionEl.appendChild(questionP);
+    questionP.textContent = quizQuestions[num].question;
+    answerEl.appendChild(aLi1);
+    answerEl.appendChild(aLi2);
+    answerEl.appendChild(aLi3);
+    answerEl.appendChild(aLi4);
+    aLi1.innerHTML = "<button class='button-answer'>" + quizQuestions[num].a[0] + "</button>";
+    aLi2.innerHTML = "<button class='button-answer'>" + quizQuestions[num].b[0] + "</button>";
+    aLi3.innerHTML = "<button class='button-answer'>" + quizQuestions[num].c[0] + "</button>";
+    aLi4.innerHTML = "<button class='button-answer'>" + quizQuestions[num].d[0] + "</button>";
+    answerEl.addEventListener("click", function (event) {
+      console.log(event.target.textContent);
+    return num;
+    });
+  };
+console.log(num);
+
+
+mainEl.addEventListener("click", function(event) {
+  var element = event.target;
+  if(element.querySelector("begin-button")) {
+  };
+  //clear main element content
+  divEl.remove();
+  //add functions to run
+  countdown();
+  quiz();
+});
 
 
