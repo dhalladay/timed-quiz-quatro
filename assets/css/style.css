@@ -1,0 +1,42 @@
+body {
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+}
+
+header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+header h2{
+  font-size: 18px;
+  font-style: normal;
+}
+
+.highscore {
+  color: purple;
+}
+
+#quiz-content {
+  text-align: center;
+}
+
+#answers {
+  list-style-type: none;
+}
+
+.button-answer {
+  justify-content: center;
+  background-color: blueviolet;
+  border-radius: 3px;
+  color: white;
+  padding: 5px;
+  margin: 5px;
+  border-collapse: collapse;
+  width: 10%;
+  height: 6%;
+}
+
+.button-answer:hover {
+  background-color: purple;
+}
