@@ -8,21 +8,41 @@ header {
   justify-content: space-between;
 }
 
+main {
+  position: relative;
+}
+
 header h2{
   font-size: 18px;
   font-style: normal;
 }
 
-.highscore {
+#high-score-button {
+  background: none;
+  border: none;
   color: purple;
+}
+
+#high-score-button:hover {
+  color: blueviolet;
+}
+
+.high-score-text {
+  text-align: center;
 }
 
 #quiz-content {
   text-align: center;
 }
 
+#question h2 {
+text-align: center;
+}
+
 #answers {
   list-style-type: none;
+  text-align: center;
+  padding: 0;
 }
 
 .button-answer {
@@ -39,4 +59,13 @@ header h2{
 
 .button-answer:hover {
   background-color: purple;
+}
+
+.return {
+  justify-content: center;
+}
+
+.score {
+  font-size: 18px;
+  text-align: center;
 }

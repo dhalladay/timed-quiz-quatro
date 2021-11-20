@@ -1,24 +1,63 @@
 //set starting variables 
 var questionNumber = 0;
-var highScore = 0;
+var startTime = 60;
+var timeInterval = startTime;
+var currentScore = 0;
+var savedHighscore = 0;
+
+//set high score from local storage if it exists
+
 var getHighscore = function() {
   if(JSON.parse(localStorage.getItem('high-score')) > 0) {
-    highScore = JSON.parse(localStorage.getItem('high-score'));
+    savedHighscore = JSON.parse(localStorage.getItem('high-score'));
+    console.log("getHighscore", savedHighscore);
+    return savedHighscore;
   }
   else {
-    highScore = 0;
-    return highScore;
+    savedHighscore = 0;
   }
 };
 
-//set high score from local storage if it exists
+//check local storage
 getHighscore();
+
+console.log("local storage", savedHighscore);
+
+//create questions array
+let quizQuestions = [
+  {
+    question:"Click HTML", 
+    options: ["HTML", "CSS", "Javascript", "jQuery"],
+    correct : "HTML"
+  },
+  {
+    question:"Click CSS", 
+    options: ["1", "2", "3", "4"],
+    correct: "CSS"
+  },
+  {
+    question:"Click Javascript", 
+    options: ["a", "b", "n", "c"],
+    correct: "Javascript"
+  },
+  {
+    question:"Click jQuery", 
+    options: ["HTML", "CSS", "Javascript", "jQuery"],
+    correct: "jQuery"
+  },
+  {
+    question:"Click It", 
+    options: ["It", "CSS", "Javascript", "jQuery"],
+    correct: "It"
+  }
+];
 
 //element selector variables
 var timerEl = document.getElementById('timer');
-var mainEl = document.getElementById('quiz-content');
+var mainEl = document.getElementById('main');
 var questionEl = document.getElementById('question');
 var answerEl = document.getElementById('answers');
+var quizContentEl = document.getElementById('quiz-content');
 
 //element creator variables
 var divEl = document.createElement('div');
@@ -33,62 +72,22 @@ var penaltyEl = document.createElement('p');
 var buttonEl = document.createElement('button');
 
 //add welcome message html
-mainEl.appendChild(divEl);
+quizContentEl.appendChild(divEl);
 divEl.appendChild(welcomeEl);
 divEl.appendChild(instructionEl);
 divEl.appendChild(penaltyEl);
 divEl.appendChild(buttonEl);
 
-//text variables
+//add css identifiers
+divEl.setAttribute("id", "welcome-content")
+buttonEl.setAttribute("data-name", "begin-button");
+buttonEl.setAttribute("class", "button-answer");
+
+//initial welcome text variables
 var welcomeMessage = 'Coding Quiz Challenge'
 var instructionMessage = 'Try to answer the following coding related questions within the time limit.'
 var penaltyMessage = 'Keep in mind that incorrect answers will penalize your score/time by ten seconds!'
 var startButton = "Start Quiz"
-var startTime = 51;
-
-//create questions array
-let quizQuestions = [
-  {
-    q:"Click HTML", 
-    a:"HTML",
-    b:"CSS",
-    c:"Javascript", 
-    d:"jQuery",
-    correct : "HTML"
-  },
-  {
-    q:"Click CSS", 
-    a:"HTML",
-    b:"CSS",
-    c:"Javascript", 
-    d:"jQuery",
-    correct: "CSS"
-  },
-  {
-    q:"Click Javascript", 
-    a:"HTML",
-    b:"CSS",
-    c:"Javascript", 
-    d:"jQuery",
-    correct: "Javascript"
-  },
-  {
-    q:"Click jQuery", 
-    a:"HTML",
-    b:"CSS",
-    c:"Javascript", 
-    d:"jQuery",
-    correct: "jQuery"
-  },
-  {
-    q:"Click It", 
-    a:"HTML",
-    b:"CSS",
-    c:"Javascript", 
-    d:"jQuery",
-    correct: "It"
-  }
-];
 
 //add textContent to welcome message
 welcomeEl.innerHTML = "<h2>" + welcomeMessage + "</h2>";
@@ -97,12 +96,8 @@ penaltyEl.textContent = penaltyMessage;
 buttonEl.textContent = startButton;
 timerEl.textContent = "Time: " + startTime;
 
-//add css identifiers
-divEl.setAttribute("id", "welcome-content")
-buttonEl.setAttribute("data-name", "begin-button");
-
 //start button functionality
-mainEl.addEventListener("click", function(event) {
+quizContentEl.addEventListener("click", function(event) {
   var element = event.target;
   if(element.querySelector("begin-button")) {
   };
@@ -113,17 +108,56 @@ mainEl.addEventListener("click", function(event) {
   quiz();
 });
 
+//create countdown function for highscore
+var countdown = function() {
+  timeInterval = setInterval(function () {
+    if(startTime > 0) {
+      timerEl.textContent = 'Time: ' + startTime;
+      startTime--;
+    }
+    else {
+      timerEl.textContent = 'Time: ' + startTime;
+      stopTime();
+      return startTime;
+    }
+  }, 1000)
+};
+
+//user answers question by clicking button
+answerEl.addEventListener("click", function(event) {
+  console.log("button click")
+  var element = event.target;
+  if(questionNumber < quizQuestions.length -1 && element.textContent === quizQuestions[questionNumber].correct) {
+    questionNumber++;
+    quiz();
+  }
+  else if (questionNumber < quizQuestions.length -1 && element.textContent != quizQuestions[questionNumber].correct) {
+    startTime = startTime - 10;
+    questionNumber++
+    quiz();
+  }
+  else if (questionNumber === quizQuestions.length -1) {
+    currentScore = startTime;
+    stopTime();
+    deleteQuiz();
+    highStore();
+    return currentScore;
+  }
+});
+
 var quiz = function() {
   questionEl.appendChild(questionP);
-  questionP.textContent = quizQuestions[questionNumber].q;
+  questionP.innerHTML = '<div">' + quizQuestions[questionNumber].question +'</div>';
+  //maybe do a for loop in case different numbers of options are wanted
+  // for (var i = 0, i < quizQuestions[questionNumber].options.length), i++)
   answerEl.appendChild(aLi1);
   answerEl.appendChild(aLi2);
   answerEl.appendChild(aLi3);
   answerEl.appendChild(aLi4);
-  aLi1.innerHTML = '<button class="button-answer">' + quizQuestions[questionNumber].a +'</button>';
-  aLi2.innerHTML = "<button class='button-answer'>" + quizQuestions[questionNumber].b + "</button>";
-  aLi3.innerHTML = "<button class='button-answer'>" + quizQuestions[questionNumber].c + "</button>";
-  aLi4.innerHTML = "<button class='button-answer'>" + quizQuestions[questionNumber].d + "</button>";
+  aLi1.innerHTML = '<button class="button-answer">' + quizQuestions[questionNumber].options[0] +'</button>';
+  aLi2.innerHTML = "<button class='button-answer'>" + quizQuestions[questionNumber].options[1] + "</button>";
+  aLi3.innerHTML = "<button class='button-answer'>" + quizQuestions[questionNumber].options[2] + "</button>";
+  aLi4.innerHTML = "<button class='button-answer'>" + quizQuestions[questionNumber].options[3] + "</button>";
 };
 
 var deleteQuiz = function() {
@@ -131,42 +165,51 @@ var deleteQuiz = function() {
   answerEl.remove();
 };
 
-//create countdown function for highscore
-var countdown = function() {
-
-  var timeInterval = setInterval(function () {
-    if(startTime > 0) {
-      timerEl.textContent = 'Time: ' + startTime;
-      startTime--;
-    }
-    else {
-      deleteQuiz();
-      timerEl.textContent = 'Time: ' + startTime;
-      clearInterval(timeInterval);
-      return startTime;
-    }
-  }, 1000)
+var stopTime = function() {
+  currentScore = startTime;
+  console.log(currentScore);
+  clearInterval(timeInterval);
+  return currentScore;
 };
 
-answerEl.addEventListener("click", function() {
-  if(questionNumber < quizQuestions.length) {
-    questionNumber++;
-    quiz();
+var highStore = function() {
+  console.log("from highStore", currentScore)
+  console.log("highscore from hstore", savedHighscore)
+  if (!savedHighscore) {
+    mainEl.innerHTML = '<div class="high-score-text">Good job! No one else has played yet so you get the highscore!</div><div class="high-score-text">Your Score: ' + currentScore + '</div>';
+
+    localStorage.setItem("high-score", currentScore);
+    return savedHighscore;
+  }
+  else if (currentScore > savedHighscore) {
+    mainEl.innerHTML = '<div class="high-score-text">Good job! You beat the high score!</div><div class="high-score-text">Your Score: ' + currentScore + '</div>';
+    localStorage.setItem("high-score", currentScore);
+    console.log("highstore scenario 1", JSON.parse(localStorage.getItem("high-score")));
   }
   else {
-    clearInterval(timeInterval);
-    deleteQuiz();
+    mainEl.innerHTML = '<div class="high-score-text">Thanks for playing! You did not get the highscore.</div><div class="high-score-text">Your Score: ' + currentScore + '</div>';
+    console.log("highstore scenario 2", JSON.parse(localStorage.getItem("high-score")));
+  }
+};
+
+//view high scores
+var button = document.getElementById("high-score-button");
+
+button.addEventListener("click", function(event) {
+  startTime = 0;
+  currentScore = 0;
+  deleteQuiz();
+  divEl.remove();
+  mainEl.innerHTML = '<div class="score">Current Highscore:</div><div class="score">'+ JSON.parse(localStorage.getItem('name')) + ' : ' + JSON.parse(localStorage.getItem('high-score')) + '</div><button class="button-answer" id="return">Return</button>';
+});
+
+//return to quiz
+
+mainEl.addEventListener("click", function(event) {
+  element = event.target
+  if(element.querySelector("#return")) {
+    console.log('trogdor');
+    location.reload();
   };
 });
 
-var highStore = function() {
-  if (startTime > highScore) {
-    localStorage.setItem("high-score", startTime);
-    console.log("1", JSON.parse(localStorage.getItem("high-score")));
-  }
-  else {
-    console.log("2", JSON.parse(localStorage.getItem("high-score")));
-  }
-};
-
-highStore();
