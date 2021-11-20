@@ -1,5 +1,18 @@
-//set starting question number
-questionNumber = 0;
+//set starting variables 
+var questionNumber = 0;
+var highScore = 0;
+var getHighscore = function() {
+  if(JSON.parse(localStorage.getItem('high-score')) > 0) {
+    highScore = JSON.parse(localStorage.getItem('high-score'));
+  }
+  else {
+    highScore = 0;
+    return highScore;
+  }
+};
+
+//set high score from local storage if it exists
+getHighscore();
 
 //element selector variables
 var timerEl = document.getElementById('timer');
@@ -31,49 +44,49 @@ var welcomeMessage = 'Coding Quiz Challenge'
 var instructionMessage = 'Try to answer the following coding related questions within the time limit.'
 var penaltyMessage = 'Keep in mind that incorrect answers will penalize your score/time by ten seconds!'
 var startButton = "Start Quiz"
-var startTime = 5;
+var startTime = 51;
 
 //create questions array
-var quizQuestions = [
+let quizQuestions = [
   {
-    "q":"Click HTML", 
-    "a":"HTML",
-    "b":"CSS",
-    "c":"Javascript", 
-    "d":"jQuery",
-    "correct": "HTML"
+    q:"Click HTML", 
+    a:"HTML",
+    b:"CSS",
+    c:"Javascript", 
+    d:"jQuery",
+    correct : "HTML"
   },
   {
-    "q":"Click CSS", 
-    "a":"HTML",
-    "b":"CSS",
-    "c":"Javascript", 
-    "d":"jQuery",
-    "correct": "CSS"
+    q:"Click CSS", 
+    a:"HTML",
+    b:"CSS",
+    c:"Javascript", 
+    d:"jQuery",
+    correct: "CSS"
   },
   {
-    "q":"Click Javascript", 
-    "a":"HTML",
-    "b":"CSS",
-    "c":"Javascript", 
-    "d":"jQuery",
-    "correct": "Javascript"
+    q:"Click Javascript", 
+    a:"HTML",
+    b:"CSS",
+    c:"Javascript", 
+    d:"jQuery",
+    correct: "Javascript"
   },
   {
-    "q":"Click jQuery", 
-    "a":"HTML",
-    "b":"CSS",
-    "c":"Javascript", 
-    "d":"jQuery",
-    "correct": "jQuery"
+    q:"Click jQuery", 
+    a:"HTML",
+    b:"CSS",
+    c:"Javascript", 
+    d:"jQuery",
+    correct: "jQuery"
   },
   {
-    "q":"Click It", 
-    "a":"HTML",
-    "b":"CSS",
-    "c":"Javascript", 
-    "d":"jQuery",
-    "correct": "It"
+    q:"Click It", 
+    a:"HTML",
+    b:"CSS",
+    c:"Javascript", 
+    d:"jQuery",
+    correct: "It"
   }
 ];
 
@@ -100,6 +113,24 @@ mainEl.addEventListener("click", function(event) {
   quiz();
 });
 
+var quiz = function() {
+  questionEl.appendChild(questionP);
+  questionP.textContent = quizQuestions[questionNumber].q;
+  answerEl.appendChild(aLi1);
+  answerEl.appendChild(aLi2);
+  answerEl.appendChild(aLi3);
+  answerEl.appendChild(aLi4);
+  aLi1.innerHTML = '<button class="button-answer">' + quizQuestions[questionNumber].a +'</button>';
+  aLi2.innerHTML = "<button class='button-answer'>" + quizQuestions[questionNumber].b + "</button>";
+  aLi3.innerHTML = "<button class='button-answer'>" + quizQuestions[questionNumber].c + "</button>";
+  aLi4.innerHTML = "<button class='button-answer'>" + quizQuestions[questionNumber].d + "</button>";
+};
+
+var deleteQuiz = function() {
+  questionEl.remove();
+  answerEl.remove();
+};
+
 //create countdown function for highscore
 var countdown = function() {
 
@@ -109,24 +140,12 @@ var countdown = function() {
       startTime--;
     }
     else {
+      deleteQuiz();
       timerEl.textContent = 'Time: ' + startTime;
       clearInterval(timeInterval);
       return startTime;
     }
   }, 1000)
-};
-
-var quiz = function() {
-  questionEl.appendChild(questionP);
-  questionP.textContent = quizQuestions[questionNumber].q;
-  answerEl.appendChild(aLi1);
-  answerEl.appendChild(aLi2);
-  answerEl.appendChild(aLi3);
-  answerEl.appendChild(aLi4);
-  aLi1.innerHTML = "<button class='button-answer'>" + quizQuestions[questionNumber].a + "</button>";
-  aLi2.innerHTML = "<button class='button-answer'>" + quizQuestions[questionNumber].b + "</button>";
-  aLi3.innerHTML = "<button class='button-answer'>" + quizQuestions[questionNumber].c + "</button>";
-  aLi4.innerHTML = "<button class='button-answer'>" + quizQuestions[questionNumber].d + "</button>";
 };
 
 answerEl.addEventListener("click", function() {
@@ -135,12 +154,19 @@ answerEl.addEventListener("click", function() {
     quiz();
   }
   else {
-    answerEl.remove();
-    questionP.textContent = "Thanks";
-  }
+    clearInterval(timeInterval);
+    deleteQuiz();
+  };
 });
 
+var highStore = function() {
+  if (startTime > highScore) {
+    localStorage.setItem("high-score", startTime);
+    console.log("1", JSON.parse(localStorage.getItem("high-score")));
+  }
+  else {
+    console.log("2", JSON.parse(localStorage.getItem("high-score")));
+  }
+};
 
-
-
-
+highStore();
