@@ -1,3 +1,6 @@
+//set starting question number
+questionNumber = 0;
+
 //element selector variables
 var timerEl = document.getElementById('timer');
 var mainEl = document.getElementById('quiz-content');
@@ -30,42 +33,47 @@ var penaltyMessage = 'Keep in mind that incorrect answers will penalize your sco
 var startButton = "Start Quiz"
 var startTime = 5;
 
-//create questions
+//create questions array
 var quizQuestions = [
   {
-    question:"Click HTML?", 
-    a:["HTML", true],
-    b:["CSS", false],
-    c:["Javascript", false], 
-    d:["jQuery", false]
+    "q":"Click HTML", 
+    "a":"HTML",
+    "b":"CSS",
+    "c":"Javascript", 
+    "d":"jQuery",
+    "correct": "HTML"
   },
   {
-    question:"Click CSS?",
-    a:["HTML", false],
-    b:["CSS", true],
-    c:["Javascript", false],
-    d:["jQuery", false]
+    "q":"Click CSS", 
+    "a":"HTML",
+    "b":"CSS",
+    "c":"Javascript", 
+    "d":"jQuery",
+    "correct": "CSS"
   },
   {
-    question:"Click Javascript?", 
-    a:["HTML", false] ,
-    b:["CSS,", false],
-    c:["jQuery", false], 
-    d:["Javascript", true] 
+    "q":"Click Javascript", 
+    "a":"HTML",
+    "b":"CSS",
+    "c":"Javascript", 
+    "d":"jQuery",
+    "correct": "Javascript"
   },
   {
-    question:"Click jQuery?", 
-    a:["HTML", false], 
-    b:["CSS", false],
-    c:["Javascript", false],
-    d:["jQuery", true]
+    "q":"Click jQuery", 
+    "a":"HTML",
+    "b":"CSS",
+    "c":"Javascript", 
+    "d":"jQuery",
+    "correct": "jQuery"
   },
   {
-    question:"Who makes bootstrap", 
-    a:["Twitter", true], 
-    b:["I do", false],
-    c:["No one?", false],
-    d:["I'm not sure", false]
+    "q":"Click It", 
+    "a":"HTML",
+    "b":"CSS",
+    "c":"Javascript", 
+    "d":"jQuery",
+    "correct": "It"
   }
 ];
 
@@ -80,48 +88,7 @@ timerEl.textContent = "Time: " + startTime;
 divEl.setAttribute("id", "welcome-content")
 buttonEl.setAttribute("data-name", "begin-button");
 
-
-console.log(quizQuestions.length);
-console.log(quizQuestions[2]);
-
-//create countdown function for highscore
-function countdown() {
-  
-  var timeInterval = setInterval(function () {
-    if(startTime > 0) {
-      timerEl.textContent = 'Time: ' + startTime;
-      startTime--;
-    }
-    else {
-      timerEl.textContent = 'Time: ' + startTime;
-      clearInterval(timeInterval);
-      return startTime;
-    }
-    console.log(startTime);
-  }, 1000)
-};
-
-var num = 0;
-
-function quiz() {
-    questionEl.appendChild(questionP);
-    questionP.textContent = quizQuestions[num].question;
-    answerEl.appendChild(aLi1);
-    answerEl.appendChild(aLi2);
-    answerEl.appendChild(aLi3);
-    answerEl.appendChild(aLi4);
-    aLi1.innerHTML = "<button class='button-answer'>" + quizQuestions[num].a[0] + "</button>";
-    aLi2.innerHTML = "<button class='button-answer'>" + quizQuestions[num].b[0] + "</button>";
-    aLi3.innerHTML = "<button class='button-answer'>" + quizQuestions[num].c[0] + "</button>";
-    aLi4.innerHTML = "<button class='button-answer'>" + quizQuestions[num].d[0] + "</button>";
-    answerEl.addEventListener("click", function (event) {
-      console.log(event.target.textContent);
-    return num;
-    });
-  };
-console.log(num);
-
-
+//start button functionality
 mainEl.addEventListener("click", function(event) {
   var element = event.target;
   if(element.querySelector("begin-button")) {
@@ -132,5 +99,48 @@ mainEl.addEventListener("click", function(event) {
   countdown();
   quiz();
 });
+
+//create countdown function for highscore
+var countdown = function() {
+
+  var timeInterval = setInterval(function () {
+    if(startTime > 0) {
+      timerEl.textContent = 'Time: ' + startTime;
+      startTime--;
+    }
+    else {
+      timerEl.textContent = 'Time: ' + startTime;
+      clearInterval(timeInterval);
+      return startTime;
+    }
+  }, 1000)
+};
+
+var quiz = function() {
+  questionEl.appendChild(questionP);
+  questionP.textContent = quizQuestions[questionNumber].q;
+  answerEl.appendChild(aLi1);
+  answerEl.appendChild(aLi2);
+  answerEl.appendChild(aLi3);
+  answerEl.appendChild(aLi4);
+  aLi1.innerHTML = "<button class='button-answer'>" + quizQuestions[questionNumber].a + "</button>";
+  aLi2.innerHTML = "<button class='button-answer'>" + quizQuestions[questionNumber].b + "</button>";
+  aLi3.innerHTML = "<button class='button-answer'>" + quizQuestions[questionNumber].c + "</button>";
+  aLi4.innerHTML = "<button class='button-answer'>" + quizQuestions[questionNumber].d + "</button>";
+};
+
+answerEl.addEventListener("click", function() {
+  if(questionNumber < quizQuestions.length) {
+    questionNumber++;
+    quiz();
+  }
+  else {
+    answerEl.remove();
+    questionP.textContent = "Thanks";
+  }
+});
+
+
+
 
 
