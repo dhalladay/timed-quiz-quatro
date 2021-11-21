@@ -4,24 +4,23 @@ var startTime = 60;
 var timeInterval = startTime;
 var currentScore = 0;
 var savedHighscore = 0;
+var playerName = localStorage.getItem('data-player-name');
 
 //set high score from local storage if it exists
 
 var getHighscore = function() {
   if(JSON.parse(localStorage.getItem('high-score')) > 0) {
     savedHighscore = JSON.parse(localStorage.getItem('high-score'));
-    console.log("getHighscore", savedHighscore);
     return savedHighscore;
   }
   else {
     savedHighscore = 0;
+    return savedHighscore;
   }
 };
 
 //check local storage
 getHighscore();
-
-console.log("local storage", savedHighscore);
 
 //create questions array
 let quizQuestions = [
@@ -32,12 +31,12 @@ let quizQuestions = [
   },
   {
     question:"Click CSS", 
-    options: ["1", "2", "3", "4"],
+    options: ["CSS", "2", "3", "4"],
     correct: "CSS"
   },
   {
     question:"Click Javascript", 
-    options: ["a", "b", "n", "c"],
+    options: ["a", "Javascript", "n", "c"],
     correct: "Javascript"
   },
   {
@@ -58,6 +57,9 @@ var mainEl = document.getElementById('main');
 var questionEl = document.getElementById('question');
 var answerEl = document.getElementById('answers');
 var quizContentEl = document.getElementById('quiz-content');
+var buttonHighScoreId = document.getElementById("high-score-button");
+var buttonNewName = document.getElementById("new-name-button");
+var buttonUpdateName = document.getElementById("update-name-button");
 
 //element creator variables
 var divEl = document.createElement('div');
@@ -167,35 +169,60 @@ var deleteQuiz = function() {
 
 var stopTime = function() {
   currentScore = startTime;
-  console.log(currentScore);
   clearInterval(timeInterval);
   return currentScore;
 };
 
-var highStore = function() {
-  console.log("from highStore", currentScore)
-  console.log("highscore from hstore", savedHighscore)
-  if (!savedHighscore) {
-    mainEl.innerHTML = '<div class="high-score-text">Good job! No one else has played yet so you get the highscore!</div><div class="high-score-text">Your Score: ' + currentScore + '</div><form class="save-name"><label>Name:<input name="save-name"></label><button type="button" class="button-answer">Save</button></form>';
+function savePlayerName() {
+  playerName = document.getElementsById('save-name').value;
+  return playerName
+};
 
+var highStore = function() {
+  if (!savedHighscore) {
+    mainEl.innerHTML = '<div class="high-score-text">Good job! No one else has played yet so you get the highscore!</div><div class="high-score-text">Your Score: ' + currentScore + '</div><form class="save-name"><label>Name:<input id="new-name-input"></label><button type="button" class="button-answer" id="new-name-button">Save</button></form>';
+    savePlayerName;
     localStorage.setItem("high-score", currentScore);
+    localStorage.setItem("player-name", playerName);
     return savedHighscore;
   }
   else if (currentScore > savedHighscore) {
-    mainEl.innerHTML = '<div class="high-score-text">Good job! You beat the high score!</div><div class="high-score-text">Your Score: ' + currentScore + '</div><form class="save-name"><label>Name:<input name="save-name"></label><button type="button" class="button-answer">Save</button></form>';
+    mainEl.innerHTML = '<div class="high-score-text">Good job! You beat the high score!</div><div class="high-score-text">Your Score: ' + currentScore + '</div><form class="save-name"><label>Name:<input id="update-name-input"></label><button type="button" class="button-answer" id="update-name-button">Save</button></form>';
+    function savePlayerName() {
+      playerName = document.getElementsById('save-name').value;
+      console.log("playername", playerName);
+      return playerName
+    };
+    savePlayerName;
     localStorage.setItem("high-score", currentScore);
-    console.log("highstore scenario 1", JSON.parse(localStorage.getItem("high-score")));
   }
   else {
     mainEl.innerHTML = '<div class="high-score-text">Thanks for playing! You did not get the highscore.</div><div class="high-score-text">Your Score: ' + currentScore + '</div><form><button class="button-answer">Retry</button><form>';
-    console.log("highstore scenario 2", JSON.parse(localStorage.getItem("high-score")));
   }
 };
 
-//view high scores
-var button = document.getElementById("high-score-button");
 
-button.addEventListener("click", function(event) {
+//new name button
+mainEl.addEventListener("click", function(event) {
+  element = event.target;
+  if (element.matches("#new-name-button")) {
+  localStorage.setItem("data-player-name", document.getElementById("new-name-input").value);
+  document.getElementById("new-name-input").value = "";
+  }
+});
+
+//new name button
+mainEl.addEventListener("click", function(event) {
+  element = event.target;
+  if (element.matches("#update-name-button")) {
+  localStorage.setItem("data-player-name", document.getElementById("update-name-input").value);
+  document.getElementById("update-name-input").value = "";
+  }
+});
+
+
+//view high scores
+buttonHighScoreId.addEventListener("click", function(event) {
   startTime = 0;
   currentScore = 0;
   deleteQuiz();
