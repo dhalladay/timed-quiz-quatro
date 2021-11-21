@@ -176,18 +176,18 @@ var highStore = function() {
   console.log("from highStore", currentScore)
   console.log("highscore from hstore", savedHighscore)
   if (!savedHighscore) {
-    mainEl.innerHTML = '<div class="high-score-text">Good job! No one else has played yet so you get the highscore!</div><div class="high-score-text">Your Score: ' + currentScore + '</div>';
+    mainEl.innerHTML = '<div class="high-score-text">Good job! No one else has played yet so you get the highscore!</div><div class="high-score-text">Your Score: ' + currentScore + '</div><form class="save-name"><label>Name:<input name="save-name"></label><button type="button" class="button-answer">Save</button></form>';
 
     localStorage.setItem("high-score", currentScore);
     return savedHighscore;
   }
   else if (currentScore > savedHighscore) {
-    mainEl.innerHTML = '<div class="high-score-text">Good job! You beat the high score!</div><div class="high-score-text">Your Score: ' + currentScore + '</div>';
+    mainEl.innerHTML = '<div class="high-score-text">Good job! You beat the high score!</div><div class="high-score-text">Your Score: ' + currentScore + '</div><form class="save-name"><label>Name:<input name="save-name"></label><button type="button" class="button-answer">Save</button></form>';
     localStorage.setItem("high-score", currentScore);
     console.log("highstore scenario 1", JSON.parse(localStorage.getItem("high-score")));
   }
   else {
-    mainEl.innerHTML = '<div class="high-score-text">Thanks for playing! You did not get the highscore.</div><div class="high-score-text">Your Score: ' + currentScore + '</div>';
+    mainEl.innerHTML = '<div class="high-score-text">Thanks for playing! You did not get the highscore.</div><div class="high-score-text">Your Score: ' + currentScore + '</div><form><button class="button-answer">Retry</button><form>';
     console.log("highstore scenario 2", JSON.parse(localStorage.getItem("high-score")));
   }
 };
@@ -200,16 +200,6 @@ button.addEventListener("click", function(event) {
   currentScore = 0;
   deleteQuiz();
   divEl.remove();
-  mainEl.innerHTML = '<div class="score">Current Highscore:</div><div class="score">'+ JSON.parse(localStorage.getItem('name')) + ' : ' + JSON.parse(localStorage.getItem('high-score')) + '</div><button class="button-answer" id="return">Return</button>';
-});
-
-//return to quiz
-
-mainEl.addEventListener("click", function(event) {
-  element = event.target
-  if(element.querySelector("#return")) {
-    console.log('trogdor');
-    location.reload();
-  };
+  mainEl.innerHTML = '<div class="score">Current Highscore:</div><div class="score">'+ JSON.parse(localStorage.getItem('name')) + ' : ' + JSON.parse(localStorage.getItem('high-score')) + '</div><form><button class="button-answer" id="return">Return</button></form>';
 });
 

@@ -61,8 +61,8 @@ text-align: center;
   background-color: purple;
 }
 
-.return {
-  justify-content: center;
+#main form {
+ text-align: center; 
 }
 
 .score {
