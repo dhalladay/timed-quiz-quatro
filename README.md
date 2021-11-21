@@ -21,11 +21,10 @@ https://dhalladay.github.io/timed-quiz-quatro/
 
 ## Usage
 
-Can be accessed by using the link about in any standard browsers. 
+It can take refresh for the saved score to appear. If it doesn't show up immediately when viewing the high score, try a page refresh.
 
-## Future updates
+This quiz be accessed by using the link about in any standard browsers. 
 
-I still need to fix the name saving portion of the quiz. I will work on that as my understanding improves. 
 
 ## Contributions
 

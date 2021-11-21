@@ -1,6 +1,6 @@
 //set starting variables 
 var questionNumber = 0;
-var startTime = 5;
+var startTime = 60;
 var timeInterval = startTime;
 var currentScore = 0;
 var savedHighscore = 0;
@@ -129,6 +129,8 @@ var countdown = function() {
     else {
       timerEl.textContent = 'Time: ' + startTime;
       stopTime();
+      deleteQuiz();
+      timerOut();
       return startTime;
     }
   }, 1000)
@@ -136,19 +138,18 @@ var countdown = function() {
 
 //user answers question by clicking button
 answerEl.addEventListener("click", function(event) {
-  console.log("button click")
   var element = event.target;
   if(questionNumber < quizQuestions.length -1 && element.textContent === quizQuestions[questionNumber].correct) {
     questionNumber++;
     quiz();
   }
   else if (questionNumber < quizQuestions.length -1 && element.textContent != quizQuestions[questionNumber].correct) {
-    startTime = startTime - 10;
+    startTime = Math.max(0, startTime - 10);
     questionNumber++
     quiz();
   }
   else if (questionNumber === quizQuestions.length -1) {
-    currentScore = startTime;
+    currentScore = Math.max(0, startTime);
     stopTime();
     deleteQuiz();
     highStore();
@@ -159,8 +160,6 @@ answerEl.addEventListener("click", function(event) {
 var quiz = function() {
   questionEl.appendChild(questionP);
   questionP.innerHTML = '<div">' + quizQuestions[questionNumber].question +'</div>';
-  //maybe do a for loop in case different numbers of options are wanted
-  // for (var i = 0, i < quizQuestions[questionNumber].options.length), i++)
   answerEl.appendChild(aLi1);
   answerEl.appendChild(aLi2);
   answerEl.appendChild(aLi3);
@@ -198,8 +197,12 @@ var highStore = function() {
     buttonContentEl.innerHTML = '<div class="high-score-text">Good job! You beat the high score!</div><div class="high-score-text">Your Score: ' + currentScore + '</div><form class="save-name"><label>Name:<input name="update-name-input"></label><button type="button" class="button-answer" id="update-name-button">Save</button></form>';
   }
   else {
-    buttonContentEl.innerHTML = '<div class="high-score-text">Thanks for playing! You did not get the highscore.</div><div class="high-score-text">Your Score: ' + currentScore + '</div><form><button class="button-answer">Retry</button><form>';
+    timerOut();
   }
+};
+
+var timerOut = function() {
+  buttonContentEl.innerHTML = '<div class="high-score-text">Thanks for playing! You did not get the highscore.</div><div class="high-score-text">Your Score: ' + currentScore + '</div><form><button class="button-answer">Retry</button><form>';
 };
 
 
@@ -209,27 +212,23 @@ buttonContentEl.addEventListener("click", function(event) {
   element = event.target;
   if (element.matches("#new-name-button")) {
     playerName = document.querySelector("input[name='new-name-input']").value;
-    console.log("new", playerName);
-  return playerName;
+    return playerName;
   }
   savePlayerName();
   savePlayerScore();
-  console.log("hiya", playerName);
 });
 
 //new name button
 buttonContentEl.addEventListener("click", function(event) {
   element = event.target;
   if (element.matches("#update-name-button")) {
-    console.log("update", playerName);
+    playerName = document.querySelector("input[name='update-name-input']").value;
+    console.log(playerName);
     return playerName;
   }
   savePlayerName();
-  savePlayerScore();
-  console.log("noya", playerName);
+  savePlayerScore(); 
 });
-
-localStorage.setItem("data-player-name", playerName);
 
 //view high scores
 buttonHighScoreId.addEventListener("click", function(event) {
