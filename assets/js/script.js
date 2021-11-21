@@ -1,27 +1,31 @@
 //set starting variables 
 var questionNumber = 0;
-var startTime = 60;
+var startTime = 5;
 var timeInterval = startTime;
 var currentScore = 0;
 var savedHighscore = 0;
 var playerName = localStorage.getItem('data-player-name');
 
-//set high score from local storage if it exists
-
+//set high score information from local storage if it exists
+//set savedHighScore variable
 var getHighscore = function() {
   if(JSON.parse(localStorage.getItem('high-score')) > 0) {
     savedHighscore = JSON.parse(localStorage.getItem('high-score'));
-    return savedHighscore;
   }
   else {
     savedHighscore = 0;
-    return savedHighscore;
+    // return savedHighscore;
+  }
+  return savedHighscore;
+};
+//set playerName variable
+var getPlayerName = function() {
+  if(!playerName) {
+  playerName = "none";
+  return playerName;
   }
 };
-
-//check local storage
-getHighscore();
-
+ 
 //create questions array
 let quizQuestions = [
   {
@@ -58,8 +62,7 @@ var questionEl = document.getElementById('question');
 var answerEl = document.getElementById('answers');
 var quizContentEl = document.getElementById('quiz-content');
 var buttonHighScoreId = document.getElementById("high-score-button");
-var buttonNewName = document.getElementById("new-name-button");
-var buttonUpdateName = document.getElementById("update-name-button");
+var buttonContentEl = document.getElementById("high-score-content");
 
 //element creator variables
 var divEl = document.createElement('div');
@@ -97,6 +100,12 @@ instructionEl.textContent = instructionMessage;
 penaltyEl.textContent = penaltyMessage;
 buttonEl.textContent = startButton;
 timerEl.textContent = "Time: " + startTime;
+
+//begin quiz functionality
+
+//check local storage
+getHighscore();
+getPlayerName();
 
 //start button functionality
 quizContentEl.addEventListener("click", function(event) {
@@ -174,52 +183,53 @@ var stopTime = function() {
 };
 
 function savePlayerName() {
-  playerName = document.getElementsById('save-name').value;
-  return playerName
+  localStorage.setItem('data-player-name', playerName);
+};
+
+function savePlayerScore() {
+  localStorage.setItem("high-score", currentScore);
 };
 
 var highStore = function() {
   if (!savedHighscore) {
-    mainEl.innerHTML = '<div class="high-score-text">Good job! No one else has played yet so you get the highscore!</div><div class="high-score-text">Your Score: ' + currentScore + '</div><form class="save-name"><label>Name:<input id="new-name-input"></label><button type="button" class="button-answer" id="new-name-button">Save</button></form>';
-    savePlayerName;
-    localStorage.setItem("high-score", currentScore);
-    localStorage.setItem("player-name", playerName);
-    return savedHighscore;
+    buttonContentEl.innerHTML = '<div class="high-score-text">Good job! No one else has played yet so you get the highscore!</div><div class="high-score-text">Your Score: ' + currentScore + '</div><form class="save-name"><label>Name:<input name="new-name-input"></label><button type="button" class="button-answer" id="new-name-button">Save</button></form>';
   }
   else if (currentScore > savedHighscore) {
-    mainEl.innerHTML = '<div class="high-score-text">Good job! You beat the high score!</div><div class="high-score-text">Your Score: ' + currentScore + '</div><form class="save-name"><label>Name:<input id="update-name-input"></label><button type="button" class="button-answer" id="update-name-button">Save</button></form>';
-    function savePlayerName() {
-      playerName = document.getElementsById('save-name').value;
-      console.log("playername", playerName);
-      return playerName
-    };
-    savePlayerName;
-    localStorage.setItem("high-score", currentScore);
+    buttonContentEl.innerHTML = '<div class="high-score-text">Good job! You beat the high score!</div><div class="high-score-text">Your Score: ' + currentScore + '</div><form class="save-name"><label>Name:<input name="update-name-input"></label><button type="button" class="button-answer" id="update-name-button">Save</button></form>';
   }
   else {
-    mainEl.innerHTML = '<div class="high-score-text">Thanks for playing! You did not get the highscore.</div><div class="high-score-text">Your Score: ' + currentScore + '</div><form><button class="button-answer">Retry</button><form>';
+    buttonContentEl.innerHTML = '<div class="high-score-text">Thanks for playing! You did not get the highscore.</div><div class="high-score-text">Your Score: ' + currentScore + '</div><form><button class="button-answer">Retry</button><form>';
   }
 };
 
 
+//button functionality
 //new name button
-mainEl.addEventListener("click", function(event) {
+buttonContentEl.addEventListener("click", function(event) {
   element = event.target;
   if (element.matches("#new-name-button")) {
-  localStorage.setItem("data-player-name", document.getElementById("new-name-input").value);
-  document.getElementById("new-name-input").value = "";
+    playerName = document.querySelector("input[name='new-name-input']").value;
+    console.log("new", playerName);
+  return playerName;
   }
+  savePlayerName();
+  savePlayerScore();
+  console.log("hiya", playerName);
 });
 
 //new name button
-mainEl.addEventListener("click", function(event) {
+buttonContentEl.addEventListener("click", function(event) {
   element = event.target;
   if (element.matches("#update-name-button")) {
-  localStorage.setItem("data-player-name", document.getElementById("update-name-input").value);
-  document.getElementById("update-name-input").value = "";
+    console.log("update", playerName);
+    return playerName;
   }
+  savePlayerName();
+  savePlayerScore();
+  console.log("noya", playerName);
 });
 
+localStorage.setItem("data-player-name", playerName);
 
 //view high scores
 buttonHighScoreId.addEventListener("click", function(event) {
@@ -227,6 +237,6 @@ buttonHighScoreId.addEventListener("click", function(event) {
   currentScore = 0;
   deleteQuiz();
   divEl.remove();
-  mainEl.innerHTML = '<div class="score">Current Highscore:</div><div class="score">'+ JSON.parse(localStorage.getItem('name')) + ' : ' + JSON.parse(localStorage.getItem('high-score')) + '</div><form><button class="button-answer" id="return">Return</button></form>';
+  mainEl.innerHTML = '<div class="score">Current Highscore:</div><div class="score">'+ playerName + ' : ' + savedHighscore + '</div><form><button class="button-answer" id="return">Return</button></form>';
 });
 
