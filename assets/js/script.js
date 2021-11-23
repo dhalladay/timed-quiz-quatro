@@ -29,29 +29,29 @@ var getPlayerName = function() {
 //create questions array
 let quizQuestions = [
   {
-    question:"Click HTML", 
+    question:"Which of these stands for Hypertext Markup Language", 
     options: ["HTML", "CSS", "Javascript", "jQuery"],
     correct : "HTML"
   },
   {
-    question:"Click CSS", 
-    options: ["CSS", "2", "3", "4"],
+    question:"___ language is used to add style to a website", 
+    options: ["CSS", "jQuery", "English", "Kling-on"],
     correct: "CSS"
   },
   {
-    question:"Click Javascript", 
-    options: ["a", "Javascript", "n", "c"],
-    correct: "Javascript"
+    question:"What type of element do you use to link your js file?", 
+    options: ["tr", "script", "p", "head"],
+    correct: "script"
   },
   {
-    question:"Click jQuery", 
+    question:"Please click jQuery.", 
     options: ["HTML", "CSS", "Javascript", "jQuery"],
     correct: "jQuery"
   },
   {
-    question:"Click It", 
-    options: ["It", "CSS", "Javascript", "jQuery"],
-    correct: "It"
+    question:"What is the most used language in programming?", 
+    options: ["profanity", "celtic", "I don't get it", "huh?"],
+    correct: "profanity"
   }
 ];
 
